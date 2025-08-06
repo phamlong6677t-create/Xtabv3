@@ -100,7 +100,7 @@
 </head>
 <body>
     <!-- Nội dung chính -->
-    <iframe id="iframe-content" class="iframe-container" src="https://phamlong6677t-create.github.io/trangchu/"></iframe>
+    <iframe id="iframe-content" class="iframe-container" src="https://phamlong6677t-create.github.io/trangchu/" allow="fullscreen"></iframe>
     
     <!-- Thanh điều hướng -->
     <div class="tab-bar">
@@ -112,7 +112,7 @@
             <img src="https://cdn-icons-png.flaticon.com/512/3031/3031293.png" alt="Explore">
             <span>Tìm kiếm</span>
         </div>
-        <div class="tab-item" onclick="openTab('https://YOUR_LINK_HERE', this)" data-tab="add">
+        <div class="tab-item" onclick="openTab('https://example.com', this)" data-tab="add">
             <img src="https://media.istockphoto.com/id/688550958/vi/vec-to/d%E1%BA%A5u-c%E1%BB%99ng-m%C3%A0u-%C4%91en-k%C3%BD-hi%E1%BB%87u-t%C3%ADch-c%E1%BB%B1c.jpg?s=612x612&w=0&k=20&c=ZJYNJ7-s-CEFxNFaj6y4aYQmLlFe9wETgoAX5xj_wWk=" alt="Add">
             <span>Thêm</span>
         </div>
@@ -158,7 +158,10 @@
                 });
                 
                 // Làm sáng icon được chọn
-                this.querySelector('img').style.filter = 'brightness(1.2) drop-shadow(0 2px 4px rgba(255, 71, 87, 0.3))';
+                const img = this.querySelector('img');
+                if (img) {
+                    img.style.filter = 'brightness(1.2) drop-shadow(0 2px 4px rgba(255, 71, 87, 0.3))';
+                }
             });
         });
 
@@ -174,7 +177,8 @@
                 
                 // Kích hoạt tab tương ứng nếu cần
                 document.querySelectorAll('.tab-item').forEach(tab => {
-                    if (tab.getAttribute('onclick').includes(searchResultUrl)) {
+                    const onclickAttr = tab.getAttribute('onclick');
+                    if (onclickAttr && onclickAttr.includes(searchResultUrl)) {
                         tab.click();
                     }
                 });
