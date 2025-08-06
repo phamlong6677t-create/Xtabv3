@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UgPhone - VPN & Gaming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: #f5f5f5;
+            overflow-x: hidden;
+        }
+        
+        /* Iframe chứa nội dung */
+        .iframe-container {
+            width: 100%;
+            height: calc(100vh - 60px);
+            border: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .iframe-container.hidden {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        
+        /* Thanh tab dưới cùng */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background: #fff;
+            border-top: 1px solid #e0e0e0;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        /* Mỗi item tab */
+        .tab-item {
+            text-align: center;
+            flex: 1;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 5px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Hiệu ứng sáng lên khi active */
+        .tab-item.active {
+            transform: translateY(-5px);
+        }
+        
+        .tab-item.active span {
+            color: #ff4757;
+            font-weight: bold;
+        }
+        
+        .tab-item img {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto 4px;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        
+        .tab-item.active img {
+            transform: scale(1.1);
+            filter: brightness(1.2) drop-shadow(0 2px 4px rgba(255, 71, 87, 0.3));
+        }
+        
+        .tab-item span {
+            color: #666;
+            transition: color 0.3s ease;
+        }
+        
+        /* Hiệu ứng khi chuyển tab */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .iframe-container.loading {
+            animation: fadeIn 0.4s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Nội dung chính -->
+    <iframe id="iframe-content" class="iframe-container" src="https://sdrake5699.github.io/Home/"></iframe>
+    
+    <!-- Thanh điều hướng -->
+    <div class="tab-bar">
+        <div class="tab-item active" onclick="openTab('https://sdrake5699.github.io/Home/', this)" data-tab="home">
+            <img src="https://i.imgur.com/gPPZf93.png" alt="Home">
+            <span>Trang Chủ</span>
+        </div>
+        <div class="tab-item" onclick="openTab('search.html', this)" data-tab="explore">
+            <img src="https://cdn-icons-png.flaticon.com/512/3031/3031293.png" alt="Explore">
+            <span>Tìm kiếm</span>
+        </div>
+        <div class="tab-item" onclick="openTab('https://YOUR_LINK_HERE', this)" data-tab="add">
+            <img src="https://media.istockphoto.com/id/688550958/vi/vec-to/d%E1%BA%A5u-c%E1%BB%99ng-m%C3%A0u-%C4%91en-k%C3%BD-hi%E1%BB%87u-t%C3%ADch-c%E1%BB%B1c.jpg?s=612x612&w=0&k=20&c=ZJYNJ7-s-CEFxNFaj6y4aYQmLlFe9wETgoAX5xj_wWk=" alt="Add">
+            <span>Thêm</span>
+        </div>
+        <div class="tab-item" onclick="openTab('https://sdrake5699.github.io/Setting/', this)" data-tab="settings">
+            <img src="https://i.imgur.com/WhQ50sV.png" alt="Settings">
+            <span>Cài Đặt</span>
+        </div>
+    </div>
+
+    <script>
+        // Hàm chuyển tab
+        function openTab(url, element) {
+            const iframe = document.getElementById('iframe-content');
+            
+            // Thêm class hidden để áp dụng hiệu ứng mờ và dịch chuyển
+            iframe.classList.add('hidden');
+            
+            // Đổi tab active
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            // Tải trang mới sau khi hiệu ứng ẩn hoàn tất
+            setTimeout(() => {
+                iframe.src = url;
+                iframe.classList.remove('hidden');
+                iframe.classList.add('loading');
+                
+                // Xóa class loading sau khi hiệu ứng hoàn tất
+                setTimeout(() => {
+                    iframe.classList.remove('loading');
+                }, 400);
+            }, 300);
+        }
+        
+        // Tự động đổi màu icon khi active
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Reset tất cả icons về màu gốc
+                document.querySelectorAll('.tab-item img').forEach(img => {
+                    img.style.filter = 'none';
+                });
+                
+                // Làm sáng icon được chọn
+                this.querySelector('img').style.filter = 'brightness(1.2) drop-shadow(0 2px 4px rgba(255, 71, 87, 0.3))';
+            });
+        });
+
+        // Xử lý kết quả tìm kiếm khi trang load
+        window.addEventListener('load', function() {
+            // Kiểm tra nếu có kết quả tìm kiếm từ trang search
+            const searchResultUrl = localStorage.getItem('selectedSearchResult');
+            
+            if (searchResultUrl) {
+                // Chuyển iframe đến URL kết quả
+                const iframe = document.getElementById('iframe-content');
+                iframe.src = searchResultUrl;
+                
+                // Kích hoạt tab tương ứng nếu cần
+                document.querySelectorAll('.tab-item').forEach(tab => {
+                    if (tab.getAttribute('onclick').includes(searchResultUrl)) {
+                        tab.click();
+                    }
+                });
+                
+                // Xóa kết quả sau khi sử dụng
+                localStorage.removeItem('selectedSearchResult');
+            }
+        });
+    </script>
+</body>
+</html>
